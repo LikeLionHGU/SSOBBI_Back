@@ -1,4 +1,4 @@
-package com.dreamteam.ssobbi.user.base.entity;
+package com.dreamteam.ssobbi.base.entity;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.EntityListeners;
