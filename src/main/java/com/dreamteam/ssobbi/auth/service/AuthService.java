@@ -30,4 +30,8 @@ public class AuthService {
               return UserDto.from(user);
             });
   }
+
+    public User getLoginUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    }
 }

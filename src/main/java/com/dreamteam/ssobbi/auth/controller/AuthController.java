@@ -27,7 +27,7 @@ public class AuthController {
   @Value("${custom.jwt.expire-time-ms}")
   private long EXPIRE_TIME_MS;
 
-  @GetMapping("/api/auth/kakao-login")
+  @GetMapping("/api/ssobbi/auth/kakao-login")
   public ResponseEntity<KakaoLoginResponse> kakaoLogin(
       @RequestParam String code, HttpServletRequest httpServletRequest) {
     UserDto dto;
