@@ -13,7 +13,7 @@ public class ScheduledConfig {
 
 	private final CoolSMSService coolSMSService;
 
-	@Scheduled(cron = "0 0 21 * * *", zone = "Asia/Seoul")
+	@Scheduled(cron = "0 0 21 * * *", zone = "Asia/Seoul", fixedDelay = 60000)
 	public void sendDailyMessage() {
 		coolSMSService.sendMessage();
 	}
