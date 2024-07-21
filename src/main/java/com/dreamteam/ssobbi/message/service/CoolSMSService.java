@@ -67,6 +67,8 @@ public class CoolSMSService {
 	}
 
 	private String getCurrentUserName() {
+		// User Entity에서 모든 정보 가져와서, map으로 이름 - 폰 번호 연결
+
     // 현재 로그인 하고 있는 사람 이름
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User) {

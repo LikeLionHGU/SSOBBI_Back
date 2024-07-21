@@ -23,4 +23,11 @@ public class UserService {
 		return new UpdateUserInfoAboutPhone(updateUserDto.getName(), updateUserDto.getPhoneNumber());
 	}
 
+	@Transactional
+	public UpdateUserInfoAboutPhone deletePhoneNumber(Long id) {
+		UserDto updateUserDto = UserDto.from(userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB.")));
+		updateUserDto.setPhoneNumber(null);
+
+		return new UpdateUserInfoAboutPhone(updateUserDto.getName(), updateUserDto.getPhoneNumber());
+	}
 }

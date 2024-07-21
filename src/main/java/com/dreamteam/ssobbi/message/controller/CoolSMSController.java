@@ -33,8 +33,8 @@ public class CoolSMSController {
 
 	private UserRepository UserRepository;
 	@PostMapping("/phone")
-	public ResponseEntity<SingleMessageSentResponse> sendOneAta(@AuthenticationPrincipal Long userId) {
-		User ewra = (User)UserRepository.findById(userId).orElseThrow(); // -> service ? dto       :: login한 사람의 정보 가져오기
+	public ResponseEntity<SingleMessageSentResponse> sendOneAta(@AuthenticationPrincipal Long id) {
+		User ewra = (User)UserRepository.findById(id).orElseThrow(); // -> service ? dto       :: login한 사람의 정보 가져오기
 //		return ResponseEntity.ok().body(coolSMSService.sendMessage(userAlarmMessageRequest));
 		return null;
 	}
