@@ -1,11 +1,15 @@
 package com.dreamteam.ssobbi.message.service;
 
+import com.dreamteam.ssobbi.user.controller.requesst.UserAlarmMessageRequest;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.KakaoOption;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import com.dreamteam.ssobbi.user.entity.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import net.nurigo.sdk.message.model.Message;
@@ -29,14 +33,17 @@ public class CoolSMSService {
 	@Value("${coolsms.api.secret}")
 	private String coolSmsApiSecret;
 
-	private final DefaultMessageService messageService;
+	@Value("${coolsms.phone.caller}")
+	private String coolSmsPhoneCaller;
 
-	public CoolSMSService() {
+	private DefaultMessageService messageService;
+
+	@PostConstruct
+	public void init() {
 		this.messageService = NurigoApp.INSTANCE.initialize(coolSmsApiKey, coolSmsApiSecret, "https://api.coolsms.co.kr");
 	}
 
-
-	public SingleMessageSentResponse sendMessage() {
+	public SingleMessageSentResponse sendMessage(UserAlarmMessageRequest userAlarmMessageRequest) {
 		KakaoOption kakaoOption = new KakaoOption();
 
 		kakaoOption.setPfId(coolSmsTemplateId);
@@ -44,13 +51,13 @@ public class CoolSMSService {
 
 		// 알림톡 템플릿 내에 #{변수} 형태가 존재할 경우 variables를 설정
 		HashMap<String, String> variables = new HashMap<>();
-//		variables.put("#{nickname}", User.name);
+		variables.put("#{nickname}", getCurrentUserName());
 		kakaoOption.setVariables(variables);
 
 		Message message = new Message();
 		// todo : 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되도록 구현
-		message.setFrom("발신번호 입력");
-		message.setTo("수신번호 입력");
+		message.setFrom(coolSmsPhoneCaller);
+		message.setTo(userAlarmMessageRequest.getUserPhoneNumber());
 		message.setKakaoOptions(kakaoOption);
 
 		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
@@ -58,4 +65,16 @@ public class CoolSMSService {
 
 		return response;
 	}
+
+	private String getCurrentUserName() {
+    // 현재 로그인 하고 있는 사람 이름
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			User user = (User) principal;
+			return user.getName();
+		}
+		return null;
+	}
+
 }
+
