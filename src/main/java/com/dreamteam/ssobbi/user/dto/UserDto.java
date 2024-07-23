@@ -11,6 +11,8 @@ public class UserDto {
   private Long id;
   private Long kakaoId;
   private String name;
+  private String phoneNumber;
+  private String profileImageUrl;
 
   public static UserDto from(User user) {
     return UserDto.builder()
