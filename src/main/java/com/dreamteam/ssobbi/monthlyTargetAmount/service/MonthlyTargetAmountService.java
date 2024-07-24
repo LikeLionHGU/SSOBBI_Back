@@ -31,6 +31,7 @@ public class MonthlyTargetAmountService {
 		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
 
 		CheckException(requests);
+		CheckDuplicateCategoryAboutDBAndInput(requests);
 
 		for(CategoryMonthlyTargetAmountRequest request : requests) {
 			MonthlyTargetAmount monthlyTargetAmount = monthlyTargetAmountRepository.save(MonthlyTargetAmount.builder()
@@ -73,7 +74,6 @@ public class MonthlyTargetAmountService {
 		CheckInputNull(requests);
 		CheckInputNegative(requests);
 		CheckDuplicateCategoryAboutInput(requests);
-		CheckDuplicateCategoryAboutDBAndInput(requests);
 	}
 
 	private void CheckDuplicateCategoryAboutDBAndInput(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
