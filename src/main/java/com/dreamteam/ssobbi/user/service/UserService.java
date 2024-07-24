@@ -1,8 +1,8 @@
 package com.dreamteam.ssobbi.user.service;
 
 import com.dreamteam.ssobbi.base.exception.NotFoundException;
-import com.dreamteam.ssobbi.user.controller.requesst.UserAlarmMessageRequest;
-import com.dreamteam.ssobbi.user.controller.requesst.UserIncomeRequest;
+import com.dreamteam.ssobbi.user.controller.request.UserAlarmMessageRequest;
+import com.dreamteam.ssobbi.user.controller.request.UserIncomeRequest;
 import com.dreamteam.ssobbi.user.controller.response.UpdateUseIncome;
 import com.dreamteam.ssobbi.user.controller.response.UpdateUserInfoAboutPhone;
 import com.dreamteam.ssobbi.user.entity.User;

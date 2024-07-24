@@ -1,4 +1,4 @@
-package com.dreamteam.ssobbi.user.controller.requesst;
+package com.dreamteam.ssobbi.user.controller.request;
 
 import lombok.Data;
 
