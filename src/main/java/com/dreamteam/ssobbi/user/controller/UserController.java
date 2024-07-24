@@ -15,13 +15,13 @@ public class UserController {
 
 	private final UserService userService;
 
-	@PostMapping("/alarmMessage/Ok")
+	@PostMapping("/alarm-message/ok")
 	public ResponseEntity<UpdateUserInfoAboutPhone> updatePhoneNumber(@AuthenticationPrincipal Long id, @RequestBody UserAlarmMessageRequest userAlarmMessageRequest) {
 		UpdateUserInfoAboutPhone updateUserInfo = userService.updatePhoneNumber(id, userAlarmMessageRequest);
 		return ResponseEntity.ok().body(updateUserInfo);
 	}
 
-	@DeleteMapping("/alarmMessage/No")
+	@DeleteMapping("/alarm-message/no")
 	public ResponseEntity<UpdateUserInfoAboutPhone> deletePhoneNumber(@AuthenticationPrincipal Long id) {
 		UpdateUserInfoAboutPhone updateUserInfo = userService.deletePhoneNumber(id);
 		return ResponseEntity.ok().body(updateUserInfo);

@@ -4,6 +4,7 @@ import com.dreamteam.ssobbi.base.exception.NotFoundException;
 import com.dreamteam.ssobbi.user.controller.requesst.UserAlarmMessageRequest;
 import com.dreamteam.ssobbi.user.controller.response.UpdateUserInfoAboutPhone;
 import com.dreamteam.ssobbi.user.dto.UserDto;
+import com.dreamteam.ssobbi.user.entity.User;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +18,18 @@ public class UserService {
 
 	@Transactional
 	public UpdateUserInfoAboutPhone updatePhoneNumber(Long id, UserAlarmMessageRequest userAlarmMessageRequest) {
-		UserDto updateUserDto = UserDto.from(userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB.")));
-		updateUserDto.setPhoneNumber(userAlarmMessageRequest.getUserPhoneNumber());
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB."));
+		user.setPhoneNumber(userAlarmMessageRequest.getUserPhoneNumber());
+		UpdateUserInfoAboutPhone updateUserDto = new UpdateUserInfoAboutPhone(user.getName(), user.getPhoneNumber());
 
 		return new UpdateUserInfoAboutPhone(updateUserDto.getName(), updateUserDto.getPhoneNumber());
 	}
 
 	@Transactional
 	public UpdateUserInfoAboutPhone deletePhoneNumber(Long id) {
-		UserDto updateUserDto = UserDto.from(userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB.")));
-		updateUserDto.setPhoneNumber(null);
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB."));
+		user.setPhoneNumber(null);
+		UpdateUserInfoAboutPhone updateUserDto = new UpdateUserInfoAboutPhone(user.getName(), user.getPhoneNumber());
 
 		return new UpdateUserInfoAboutPhone(updateUserDto.getName(), updateUserDto.getPhoneNumber());
 	}

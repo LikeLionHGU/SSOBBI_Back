@@ -1,63 +1,83 @@
 package com.dreamteam.ssobbi.message.service;
 
-import com.dreamteam.ssobbi.user.controller.requesst.UserAlarmMessageRequest;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import com.dreamteam.ssobbi.message.controller.CoolSMSController;
+import com.dreamteam.ssobbi.user.dto.UserDto;
+import com.dreamteam.ssobbi.user.repository.UserRepository;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.KakaoOption;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import com.dreamteam.ssobbi.user.entity.User;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import net.nurigo.sdk.message.model.Message;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class CoolSMSService {
 
-	@Value("${coolsms.template.ID}")
-	private String coolSmsTemplateId;
+	private final DefaultMessageService messageService;
+	private static final Logger logger = LoggerFactory.getLogger(CoolSMSController.class);
 
-	@Value("${coolsms.template.PFID}")
-	private String coolSmsTemplatePfId;
+	@Value("${coolsms.template.ID}") String templateId;
+	@Value("${coolsms.template.PFID}") String templatePfId;
+	@Value("${coolsms.phone.caller}")  String coolSmsPhoneCaller;
 
-	@Value("${coolsms.api.key}")
-	private String coolSmsApiKey;
+	private final UserRepository userRepository;
+	private final KakaoOption kakaoOption = new KakaoOption();
 
-	@Value("${coolsms.api.secret}")
-	private String coolSmsApiSecret;
+	/**
+	 * 발급받은 API KEY와 API Secret Key를 사용해주세요.
+	 */
+	public CoolSMSService(
+		@Value("${coolsms.api.key}") String apiKey,
+		@Value("${coolsms.api.secret}") String apiSecret,
+		UserRepository userRepository
+	) {
+		this.userRepository = userRepository;
+		if (apiKey == null || apiKey.isEmpty() || apiSecret == null || apiSecret.isEmpty()) {
+			throw new IllegalArgumentException("API key and secret must be provided");
+		}
 
-	@Value("${coolsms.phone.caller}")
-	private String coolSmsPhoneCaller;
-
-	private DefaultMessageService messageService;
-
-	@PostConstruct
-	public void init() {
-		this.messageService = NurigoApp.INSTANCE.initialize(coolSmsApiKey, coolSmsApiSecret, "https://api.coolsms.co.kr");
+		this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
 	}
 
-	public SingleMessageSentResponse sendMessage(UserAlarmMessageRequest userAlarmMessageRequest) {
-		KakaoOption kakaoOption = new KakaoOption();
 
-		kakaoOption.setPfId(coolSmsTemplateId);
-		kakaoOption.setTemplateId(coolSmsTemplatePfId);
+	public ArrayList<SingleMessageSentResponse> sendMessage() {
+		ArrayList<SingleMessageSentResponse> result = new ArrayList<>();
 
+		kakaoOption.setPfId(templatePfId);
+		kakaoOption.setTemplateId(templateId);
+
+		HashMap<String, String> usersMap = getAlarmMessageOkUser();
+		if(usersMap.isEmpty()) return null;
+
+		for(Map.Entry<String, String> entry : usersMap.entrySet()) {
+			SingleMessageSentResponse eachAlarmStatusResponse = sendMessageEachUser(entry.getKey(), entry.getValue());
+			result.add(eachAlarmStatusResponse);
+		}
+
+		return result;
+	}
+
+	private SingleMessageSentResponse sendMessageEachUser(String key, String value) {
 		// 알림톡 템플릿 내에 #{변수} 형태가 존재할 경우 variables를 설정
 		HashMap<String, String> variables = new HashMap<>();
-		variables.put("#{nickname}", getCurrentUserName());
+		variables.put("#{nickname}", key);
 		kakaoOption.setVariables(variables);
 
 		Message message = new Message();
-		// todo : 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되도록 구현
 		message.setFrom(coolSmsPhoneCaller);
-		message.setTo(userAlarmMessageRequest.getUserPhoneNumber());
+		message.setTo(value);
 		message.setKakaoOptions(kakaoOption);
 
 		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
@@ -66,17 +86,30 @@ public class CoolSMSService {
 		return response;
 	}
 
-	private String getCurrentUserName() {
-		// User Entity에서 모든 정보 가져와서, map으로 이름 - 폰 번호 연결
+	private HashMap<String, String> getAlarmMessageOkUser() {
+		ArrayList<UserDto> usersDto = getAllUserDto();
+		return getTargetUserInfo(usersDto);
+	}
 
-    // 현재 로그인 하고 있는 사람 이름
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User) {
-			User user = (User) principal;
-			return user.getName();
+	private HashMap<String, String> getTargetUserInfo(ArrayList<UserDto> usersDto){
+		HashMap<String, String> target = new HashMap<>();
+
+		for (UserDto userDto : usersDto) {
+			if (userDto.getName() != null && userDto.getPhoneNumber() != null) {
+				target.put(userDto.getName(), userDto.getPhoneNumber());
+			}
 		}
-		return null;
+		return target;
+	}
+
+	private ArrayList<UserDto> getAllUserDto() {
+		List<User> users = userRepository.findAll();
+		ArrayList<UserDto> usersDto = new ArrayList<>();
+
+		for (User user : users) {
+			usersDto.add(UserDto.from(user));
+		}
+		return usersDto;
 	}
 
 }
-
