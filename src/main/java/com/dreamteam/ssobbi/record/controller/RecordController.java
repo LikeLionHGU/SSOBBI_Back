@@ -3,6 +3,7 @@ package com.dreamteam.ssobbi.record.controller;
 import com.dreamteam.ssobbi.record.controller.request.AddRecordRequest;
 import com.dreamteam.ssobbi.record.controller.request.UpdateRecordRequest;
 import com.dreamteam.ssobbi.record.controller.response.DailyRecordResponse;
+import com.dreamteam.ssobbi.record.controller.response.DailyRecordSummaryResponse;
 import com.dreamteam.ssobbi.record.dto.RecordDto;
 import com.dreamteam.ssobbi.record.service.RecordService;
 import lombok.RequiredArgsConstructor;
@@ -45,4 +46,10 @@ public class RecordController {
     recordService.deleteRecord(id, userId);
     return ResponseEntity.ok().build();
   }
+
+    @GetMapping("/api/ssobbi/records/daily/{date}/summary")
+    public ResponseEntity<DailyRecordSummaryResponse> getDailyRecordSummary(
+        @PathVariable LocalDate date, @AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(DailyRecordSummaryResponse.from(recordService.getDailyRecord(date, userId)));
+    }
 }
