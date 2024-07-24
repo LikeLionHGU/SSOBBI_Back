@@ -55,6 +55,20 @@ public class MonthlyTargetAmountService {
 		}
 	}
 
+	public ArrayList<CategoryMonthlyTargetAmountRequest> getMonthlyTargetAmount(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
+
+		ArrayList<MonthlyTargetAmount> monthlyTargetAmounts = monthlyTargetAmountRepository.findByUser(user);
+
+		ArrayList<CategoryMonthlyTargetAmountRequest> categoryMonthlyTargetAmountRequests = new ArrayList<>();
+		for(MonthlyTargetAmount monthlyTargetAmount : monthlyTargetAmounts) {
+			categoryMonthlyTargetAmountRequests.add(new CategoryMonthlyTargetAmountRequest(monthlyTargetAmount.getCategory(), monthlyTargetAmount.getAmount()));
+		}
+
+		return categoryMonthlyTargetAmountRequests;
+	}
+
+
 	private void CheckException(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
 		CheckInputNull(requests);
 		CheckInputNegative(requests);
@@ -86,5 +100,6 @@ public class MonthlyTargetAmountService {
 			}
 		}
 	}
+
 }
 

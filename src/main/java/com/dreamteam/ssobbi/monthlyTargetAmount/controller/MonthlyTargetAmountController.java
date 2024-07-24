@@ -22,6 +22,11 @@ public class MonthlyTargetAmountController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/monthly/TargetAmount")
+	public ResponseEntity<ArrayList<CategoryMonthlyTargetAmountRequest>> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId) {
+		return ResponseEntity.ok(monthlyTargetAmountService.getMonthlyTargetAmount(userId));
+	}
+
 	@PatchMapping("/monthly/TargetAmount")
 	public ResponseEntity<Void> updateMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
 		monthlyTargetAmountService.updateMonthlyTargetAmount(userId, request);
