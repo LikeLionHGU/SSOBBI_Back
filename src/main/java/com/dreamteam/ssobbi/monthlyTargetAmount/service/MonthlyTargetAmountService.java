@@ -29,7 +29,6 @@ public class MonthlyTargetAmountService {
 
 	public void saveMonthlyTargetAmount(Long id, ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
 		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
-		ArrayList<MonthlyTargetAmountDto> responses = new ArrayList<>();
 
 		CheckException(requests);
 
@@ -39,16 +38,12 @@ public class MonthlyTargetAmountService {
 				.amount(request.getAmount())
 				.user(user)
 				.build());
-			responses.add(MonthlyTargetAmountDto.from(monthlyTargetAmount));
 		}
-
-		new CategoryMonthlyTargetAmountResponse(user.getName(), responses);
 	}
 
 	@Transactional
-	public CategoryMonthlyTargetAmountResponse updateMonthlyTargetAmount(Long userId, ArrayList<CategoryMonthlyTargetAmountRequest> request) {
+	public void updateMonthlyTargetAmount(Long userId, ArrayList<CategoryMonthlyTargetAmountRequest> request) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
-		ArrayList<MonthlyTargetAmountDto> responses = new ArrayList<>();
 
 		CheckException(request);
 
@@ -57,10 +52,7 @@ public class MonthlyTargetAmountService {
 				.orElseThrow(() -> new NotFoundException("해당 카테고리의 목표 금액이 DB에 없습니다."));
 			monthlyTargetAmount.setAmount(categoryMonthlyTargetAmountRequest.getAmount());
 			monthlyTargetAmountRepository.save(monthlyTargetAmount);
-			responses.add(MonthlyTargetAmountDto.from(monthlyTargetAmount));
 		}
-
-		return new CategoryMonthlyTargetAmountResponse(user.getName(), responses);
 	}
 
 	private void CheckException(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {

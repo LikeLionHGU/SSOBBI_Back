@@ -1,6 +1,5 @@
 package com.dreamteam.ssobbi.monthlyTargetAmount.controller;
 
-import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
 import com.dreamteam.ssobbi.monthlyTargetAmount.service.MonthlyTargetAmountService;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +17,15 @@ public class MonthlyTargetAmountController {
 	private final MonthlyTargetAmountService monthlyTargetAmountService;
 
 	@PostMapping("/monthly/TargetAmount")
-	public ResponseEntity<Void> getMonthlyTargetAmount(@AuthenticationPrincipal Long id, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
-		monthlyTargetAmountService.saveMonthlyTargetAmount(id, request);
+	public ResponseEntity<Void> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
+		monthlyTargetAmountService.saveMonthlyTargetAmount(userId, request);
 		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/monthly/TargetAmount")
-	public ResponseEntity<CategoryMonthlyTargetAmountResponse> updateMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
-
-		CategoryMonthlyTargetAmountResponse response = monthlyTargetAmountService.updateMonthlyTargetAmount(userId, request);
-		return ResponseEntity.ok().body(response);
-//		return ResponseEntity.ok().build();
+	public ResponseEntity<Void> updateMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
+		monthlyTargetAmountService.updateMonthlyTargetAmount(userId, request);
+		return ResponseEntity.ok().build();
 	}
 
 }
