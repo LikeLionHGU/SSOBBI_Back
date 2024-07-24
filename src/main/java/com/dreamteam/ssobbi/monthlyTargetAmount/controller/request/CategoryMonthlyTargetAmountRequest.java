@@ -1,5 +1,6 @@
 package com.dreamteam.ssobbi.monthlyTargetAmount.controller.request;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 
 @Getter

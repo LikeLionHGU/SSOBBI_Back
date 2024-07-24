@@ -21,9 +21,9 @@ public class MonthlyTargetAmountController {
 	private final MonthlyTargetAmountService monthlyTargetAmountService;
 
 	@PostMapping("/monthly/TargetAmount")
-	public ResponseEntity<CategoryMonthlyTargetAmountResponse> getMonthlyTargetAmount(@AuthenticationPrincipal Long id, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
-		CategoryMonthlyTargetAmountResponse response = monthlyTargetAmountService.saveMonthlyTargetAmount(id, request);
-		return ResponseEntity.ok().body(response);
+	public ResponseEntity<Void> getMonthlyTargetAmount(@AuthenticationPrincipal Long id, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
+		monthlyTargetAmountService.saveMonthlyTargetAmount(id, request);
+		return ResponseEntity.ok().build();
 	}
 
 }

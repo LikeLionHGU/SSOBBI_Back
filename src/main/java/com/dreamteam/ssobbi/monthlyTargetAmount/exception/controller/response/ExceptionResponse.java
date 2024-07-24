@@ -1,4 +1,4 @@
-package com.dreamteam.ssobbi.base.exception.controller.response;
+package com.dreamteam.ssobbi.monthlyTargetAmount.exception.controller.response;
 
 import lombok.Builder;
 import lombok.Getter;
