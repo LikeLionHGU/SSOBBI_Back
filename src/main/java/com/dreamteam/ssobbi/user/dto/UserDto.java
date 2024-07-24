@@ -14,8 +14,9 @@ public class UserDto {
   private Long id;
   private Long kakaoId;
   private String name;
-  @Setter private String phoneNumber;
-  @Setter private String profileImageUrl;
+  private String phoneNumber;
+  private String profileImageUrl;
+  private Integer income;
 
   public static UserDto from(User user) {
     return UserDto.builder()
@@ -24,6 +25,7 @@ public class UserDto {
         .name(user.getName())
         .phoneNumber(user.getPhoneNumber())
         .profileImageUrl(user.getProfileImageUrl())
+        .income(user.getIncome())
         .build();
   }
 
@@ -36,6 +38,7 @@ public class UserDto {
           .name(user.getName())
           .phoneNumber(user.getPhoneNumber())
           .profileImageUrl(user.getProfileImageUrl())
+          .income(user.getIncome())
           .build());
     }
     return userDtos;
