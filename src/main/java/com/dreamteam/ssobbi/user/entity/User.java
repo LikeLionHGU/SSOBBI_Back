@@ -28,6 +28,8 @@ public class User extends BaseTime {
     @Column(columnDefinition = "varchar(500)")
     private String profileImageUrl;
 
+    @Setter
+    private Integer income;
 
     public static User from(UserDto dto){
         return User.builder()
@@ -35,6 +37,7 @@ public class User extends BaseTime {
                 .name(dto.getName())
                 .phoneNumber(dto.getPhoneNumber())
                 .profileImageUrl(dto.getProfileImageUrl())
+                .income(dto.getIncome())
                 .build();
     }
 }

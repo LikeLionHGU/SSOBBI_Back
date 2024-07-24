@@ -1,9 +1,10 @@
 package com.dreamteam.ssobbi.user.service;
 
 import com.dreamteam.ssobbi.base.exception.NotFoundException;
-import com.dreamteam.ssobbi.user.controller.requesst.UserAlarmMessageRequest;
+import com.dreamteam.ssobbi.user.controller.request.UserAlarmMessageRequest;
+import com.dreamteam.ssobbi.user.controller.request.UserIncomeRequest;
+import com.dreamteam.ssobbi.user.controller.response.UpdateUseIncome;
 import com.dreamteam.ssobbi.user.controller.response.UpdateUserInfoAboutPhone;
-import com.dreamteam.ssobbi.user.dto.UserDto;
 import com.dreamteam.ssobbi.user.entity.User;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -18,19 +19,25 @@ public class UserService {
 
 	@Transactional
 	public UpdateUserInfoAboutPhone updatePhoneNumber(Long id, UserAlarmMessageRequest userAlarmMessageRequest) {
-		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB."));
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("유저 정보가 DB에 없습니다."));
 		user.setPhoneNumber(userAlarmMessageRequest.getUserPhoneNumber());
-		UpdateUserInfoAboutPhone updateUserDto = new UpdateUserInfoAboutPhone(user.getName(), user.getPhoneNumber());
 
-		return new UpdateUserInfoAboutPhone(updateUserDto.getName(), updateUserDto.getPhoneNumber());
+		return new UpdateUserInfoAboutPhone(user.getName(), user.getPhoneNumber());
 	}
 
 	@Transactional
 	public UpdateUserInfoAboutPhone deletePhoneNumber(Long id) {
-		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found in DB."));
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("유저 정보가 DB에 없습니다."));
 		user.setPhoneNumber(null);
-		UpdateUserInfoAboutPhone updateUserDto = new UpdateUserInfoAboutPhone(user.getName(), user.getPhoneNumber());
 
-		return new UpdateUserInfoAboutPhone(updateUserDto.getName(), updateUserDto.getPhoneNumber());
+		return new UpdateUserInfoAboutPhone(user.getName(), user.getPhoneNumber());
+	}
+
+	@Transactional
+	public UpdateUseIncome updateIncome(Long id, UserIncomeRequest userIncomeRequest) {
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("유저 정보가 DB에 없습니다"));
+		user.setIncome(userIncomeRequest.getIncome());
+
+		return new UpdateUseIncome(user.getName(), user.getIncome());
 	}
 }
