@@ -11,6 +11,7 @@ import com.dreamteam.ssobbi.monthlyTargetAmount.exception.NullValueException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.repository.MonthlyTargetAmountRepository;
 import com.dreamteam.ssobbi.user.entity.User;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,6 +43,24 @@ public class MonthlyTargetAmountService {
 		}
 
 		new CategoryMonthlyTargetAmountResponse(user.getName(), responses);
+	}
+
+	@Transactional
+	public CategoryMonthlyTargetAmountResponse updateMonthlyTargetAmount(Long userId, ArrayList<CategoryMonthlyTargetAmountRequest> request) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
+		ArrayList<MonthlyTargetAmountDto> responses = new ArrayList<>();
+
+		CheckException(request);
+
+		for(CategoryMonthlyTargetAmountRequest categoryMonthlyTargetAmountRequest : request) {
+			MonthlyTargetAmount monthlyTargetAmount = (MonthlyTargetAmount) monthlyTargetAmountRepository.findByUserAndCategory(user, categoryMonthlyTargetAmountRequest.getCategory())
+				.orElseThrow(() -> new NotFoundException("해당 카테고리의 목표 금액이 DB에 없습니다."));
+			monthlyTargetAmount.setAmount(categoryMonthlyTargetAmountRequest.getAmount());
+			monthlyTargetAmountRepository.save(monthlyTargetAmount);
+			responses.add(MonthlyTargetAmountDto.from(monthlyTargetAmount));
+		}
+
+		return new CategoryMonthlyTargetAmountResponse(user.getName(), responses);
 	}
 
 	private void CheckException(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {

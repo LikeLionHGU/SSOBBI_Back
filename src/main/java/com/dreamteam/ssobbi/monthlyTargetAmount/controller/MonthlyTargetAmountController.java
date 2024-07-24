@@ -6,10 +6,7 @@ import com.dreamteam.ssobbi.monthlyTargetAmount.service.MonthlyTargetAmountServi
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -24,6 +21,14 @@ public class MonthlyTargetAmountController {
 	public ResponseEntity<Void> getMonthlyTargetAmount(@AuthenticationPrincipal Long id, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
 		monthlyTargetAmountService.saveMonthlyTargetAmount(id, request);
 		return ResponseEntity.ok().build();
+	}
+
+	@PatchMapping("/monthly/TargetAmount")
+	public ResponseEntity<CategoryMonthlyTargetAmountResponse> updateMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
+
+		CategoryMonthlyTargetAmountResponse response = monthlyTargetAmountService.updateMonthlyTargetAmount(userId, request);
+		return ResponseEntity.ok().body(response);
+//		return ResponseEntity.ok().build();
 	}
 
 }

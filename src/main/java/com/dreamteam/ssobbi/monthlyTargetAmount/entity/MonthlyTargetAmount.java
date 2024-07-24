@@ -4,10 +4,7 @@ import com.dreamteam.ssobbi.base.entity.BaseTime;
 import com.dreamteam.ssobbi.monthlyTargetAmount.dto.MonthlyTargetAmountDto;
 import com.dreamteam.ssobbi.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -24,6 +21,7 @@ public class MonthlyTargetAmount extends BaseTime {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Setter
     @Column(nullable = false)
     private Integer amount;
 
