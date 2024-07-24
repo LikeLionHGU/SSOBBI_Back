@@ -72,7 +72,16 @@ public class MonthlyTargetAmountService {
 	private void CheckException(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
 		CheckInputNull(requests);
 		CheckInputNegative(requests);
-		CheckDuplicateCategory(requests);
+		CheckDuplicateCategoryAboutInput(requests);
+		CheckDuplicateCategoryAboutDBAndInput(requests);
+	}
+
+	private void CheckDuplicateCategoryAboutDBAndInput(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
+		for(CategoryMonthlyTargetAmountRequest request : requests) {
+			if(monthlyTargetAmountRepository.existsByCategory(request.getCategory())) {
+				throw new DuplicateValueException("DB에 이미 존재하는 category가 있습니다.");
+			}
+		}
 	}
 
 	private void CheckInputNegative(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
@@ -91,7 +100,7 @@ public class MonthlyTargetAmountService {
 		}
 	}
 
-	private void CheckDuplicateCategory(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
+	private void CheckDuplicateCategoryAboutInput(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
 		for(int i = 0; i < requests.size(); i++) {
 			for(int j = i + 1; j < requests.size(); j++) {
 				if(requests.get(i).getCategory().equals(requests.get(j).getCategory())) {

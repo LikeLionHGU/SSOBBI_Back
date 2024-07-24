@@ -14,4 +14,6 @@ public interface MonthlyTargetAmountRepository extends JpaRepository<MonthlyTarg
 	Optional<Object> findByUserAndCategory(User user, String category);
 
 	ArrayList<MonthlyTargetAmount> findByUser(User user);
+
+	boolean existsByCategory(String category);
 }
