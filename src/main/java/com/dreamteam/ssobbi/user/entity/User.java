@@ -2,7 +2,6 @@ package com.dreamteam.ssobbi.user.entity;
 
 import com.dreamteam.ssobbi.base.entity.BaseTime;
 import com.dreamteam.ssobbi.user.dto.UserDto;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +28,9 @@ public class User extends BaseTime {
     @Column(columnDefinition = "varchar(500)")
     private String profileImageUrl;
 
+
     public static User from(UserDto dto){
         return User.builder()
-                .id(dto.getId())
                 .kakaoId(dto.getKakaoId())
                 .name(dto.getName())
                 .phoneNumber(dto.getPhoneNumber())
