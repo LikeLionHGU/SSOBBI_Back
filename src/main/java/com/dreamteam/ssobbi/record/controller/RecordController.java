@@ -38,4 +38,11 @@ public class RecordController {
     recordService.updateRecord(id, RecordDto.from(request), userId);
     return ResponseEntity.ok().build();
   }
+
+  @DeleteMapping("/api/ssobbi/records/{id}")
+  public ResponseEntity<Void> deleteRecord(
+      @PathVariable Long id, @AuthenticationPrincipal Long userId) {
+    recordService.deleteRecord(id, userId);
+    return ResponseEntity.ok().build();
+  }
 }

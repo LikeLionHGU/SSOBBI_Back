@@ -40,12 +40,19 @@ public class RecordService {
 
   public void updateRecord(Long id, RecordDto dto, Long userId) {
     Record record =
-        recordRepository
-            .findById(id)
-            .orElseThrow(() -> new NotFoundException("해당 기록이 존재하지 않습니다."));
+        recordRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 기록이 존재하지 않습니다."));
     if (!record.getUser().getId().equals(userId)) {
       throw new UnauthorizedAccessException();
     }
     record.update(dto);
+  }
+
+  public void deleteRecord(Long id, Long userId) {
+    Record record =
+        recordRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 기록이 존재하지 않습니다."));
+    if (!record.getUser().getId().equals(userId)) {
+      throw new UnauthorizedAccessException();
+    }
+    recordRepository.delete(record);
   }
 }
