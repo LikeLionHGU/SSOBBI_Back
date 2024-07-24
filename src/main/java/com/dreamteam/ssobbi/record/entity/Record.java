@@ -52,4 +52,11 @@ public class Record extends BaseTime {
     record.setConsumptions(Consumption.listFrom(dto.getConsumptions(), record));
     return record;
   }
+
+  public void update(RecordDto dto) {
+    this.happinessRate = dto.getHappinessRate();
+    this.content = dto.getContent();
+    this.consumptions.clear();
+    this.consumptions.addAll(Consumption.listFrom(dto.getConsumptions(), this));
+  }
 }

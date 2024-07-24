@@ -1,6 +1,7 @@
 package com.dreamteam.ssobbi.record.dto;
 
 import com.dreamteam.ssobbi.record.controller.request.AddRecordRequest;
+import com.dreamteam.ssobbi.record.controller.request.UpdateRecordRequest;
 import com.dreamteam.ssobbi.record.entity.Record;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,24 @@ public class RecordDto {
         .happinessRate(request.getHappinessRate())
         .content(request.getContent())
         .date(request.getDate())
+        .consumptions(
+            request.getConsumptions().stream()
+                .map(
+                    consumption ->
+                        ConsumptionDto.builder()
+                            .category(consumption.getCategory())
+                            .amount(consumption.getAmount())
+                            .targetAmount(consumption.getTargetAmount())
+                            .isOverConsumption(consumption.getIsOverConsumption())
+                            .build())
+                .toList())
+        .build();
+  }
+
+  public static RecordDto from(UpdateRecordRequest request) {
+    return RecordDto.builder()
+        .happinessRate(request.getHappinessRate())
+        .content(request.getContent())
         .consumptions(
             request.getConsumptions().stream()
                 .map(

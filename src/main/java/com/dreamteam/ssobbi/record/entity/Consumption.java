@@ -22,7 +22,7 @@ public class Consumption extends BaseTime {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "record_id", nullable = false)
+  @JoinColumn(name = "record_id")
   private Record record;
 
   private Integer amount;
