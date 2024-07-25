@@ -3,7 +3,6 @@ package com.dreamteam.ssobbi.monthlyTargetAmount.service;
 import com.dreamteam.ssobbi.base.exception.NotFoundException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
-import com.dreamteam.ssobbi.monthlyTargetAmount.dto.MonthlyTargetAmountDto;
 import com.dreamteam.ssobbi.monthlyTargetAmount.entity.MonthlyTargetAmount;
 import com.dreamteam.ssobbi.monthlyTargetAmount.exception.DuplicateValueException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.exception.NegativeValueException;
@@ -56,16 +55,18 @@ public class MonthlyTargetAmountService {
 		}
 	}
 
-	public ArrayList<CategoryMonthlyTargetAmountRequest> getMonthlyTargetAmount(Long userId) {
+	public CategoryMonthlyTargetAmountResponse getMonthlyTargetAmount(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
-
 		ArrayList<MonthlyTargetAmount> monthlyTargetAmounts = monthlyTargetAmountRepository.findByUser(user);
 
+		return new CategoryMonthlyTargetAmountResponse(convertToCategoryMonthlyTargetAmountRequest(monthlyTargetAmounts));
+	}
+
+	private ArrayList<CategoryMonthlyTargetAmountRequest> convertToCategoryMonthlyTargetAmountRequest(ArrayList<MonthlyTargetAmount> monthlyTargetAmounts) {
 		ArrayList<CategoryMonthlyTargetAmountRequest> categoryMonthlyTargetAmountRequests = new ArrayList<>();
 		for(MonthlyTargetAmount monthlyTargetAmount : monthlyTargetAmounts) {
 			categoryMonthlyTargetAmountRequests.add(new CategoryMonthlyTargetAmountRequest(monthlyTargetAmount.getCategory(), monthlyTargetAmount.getAmount()));
 		}
-
 		return categoryMonthlyTargetAmountRequests;
 	}
 

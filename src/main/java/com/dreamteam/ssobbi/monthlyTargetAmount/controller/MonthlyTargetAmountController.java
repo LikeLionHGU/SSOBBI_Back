@@ -1,6 +1,9 @@
 package com.dreamteam.ssobbi.monthlyTargetAmount.controller;
 
+//import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
+import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
+import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequests;
 import com.dreamteam.ssobbi.monthlyTargetAmount.service.MonthlyTargetAmountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +20,19 @@ public class MonthlyTargetAmountController {
 	private final MonthlyTargetAmountService monthlyTargetAmountService;
 
 	@PostMapping("/monthly/TargetAmount")
-	public ResponseEntity<Void> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
-		monthlyTargetAmountService.saveMonthlyTargetAmount(userId, request);
+	public ResponseEntity<Void> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody CategoryMonthlyTargetAmountRequests request) {
+		monthlyTargetAmountService.saveMonthlyTargetAmount(userId, request.getRequests());
 		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/monthly/TargetAmount")
-	public ResponseEntity<ArrayList<CategoryMonthlyTargetAmountRequest>> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId) {
+	public ResponseEntity<CategoryMonthlyTargetAmountResponse> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId) {
 		return ResponseEntity.ok(monthlyTargetAmountService.getMonthlyTargetAmount(userId));
 	}
 
 	@PatchMapping("/monthly/TargetAmount")
-	public ResponseEntity<Void> updateMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody ArrayList<CategoryMonthlyTargetAmountRequest> request) {
-		monthlyTargetAmountService.updateMonthlyTargetAmount(userId, request);
+	public ResponseEntity<Void> updateMonthlyTargetAmount(@AuthenticationPrincipal Long userId, @RequestBody CategoryMonthlyTargetAmountRequests request) {
+		monthlyTargetAmountService.updateMonthlyTargetAmount(userId, request.getRequests());
 		return ResponseEntity.ok().build();
 	}
 
