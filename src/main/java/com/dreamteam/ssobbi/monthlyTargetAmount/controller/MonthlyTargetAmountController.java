@@ -1,6 +1,7 @@
 package com.dreamteam.ssobbi.monthlyTargetAmount.controller;
 
 //import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
+import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountCategoryResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequests;
@@ -28,6 +29,11 @@ public class MonthlyTargetAmountController {
 	@GetMapping("/monthly/TargetAmount")
 	public ResponseEntity<CategoryMonthlyTargetAmountResponse> getMonthlyTargetAmount(@AuthenticationPrincipal Long userId) {
 		return ResponseEntity.ok(monthlyTargetAmountService.getMonthlyTargetAmount(userId));
+	}
+
+	@GetMapping("/monthly/TargetAmount/category-list")
+	public ResponseEntity<CategoryMonthlyTargetAmountCategoryResponse> getMonthlyTargetAmountByCategory(@AuthenticationPrincipal Long userId) {
+		return ResponseEntity.ok(monthlyTargetAmountService.getMonthlyTargetAmountByCategory(userId));
 	}
 
 	@PatchMapping("/monthly/TargetAmount")

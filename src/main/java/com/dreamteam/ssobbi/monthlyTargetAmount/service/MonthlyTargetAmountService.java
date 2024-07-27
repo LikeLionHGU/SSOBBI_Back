@@ -1,6 +1,7 @@
 package com.dreamteam.ssobbi.monthlyTargetAmount.service;
 
 import com.dreamteam.ssobbi.base.exception.NotFoundException;
+import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountCategoryResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
 import com.dreamteam.ssobbi.monthlyTargetAmount.entity.MonthlyTargetAmount;
@@ -111,5 +112,24 @@ public class MonthlyTargetAmountService {
 		}
 	}
 
+
+	public CategoryMonthlyTargetAmountCategoryResponse getMonthlyTargetAmountByCategory(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
+
+		ArrayList<MonthlyTargetAmount> monthlyTargetAmounts = monthlyTargetAmountRepository.findByUser(user);
+
+		return getMonthlyTargetAmountByCategoryList(monthlyTargetAmounts);
+
+	}
+
+	private CategoryMonthlyTargetAmountCategoryResponse getMonthlyTargetAmountByCategoryList(ArrayList<MonthlyTargetAmount> monthlyTargetAmounts) {
+		ArrayList<String> categoryMonthlyTargetAmountResponse = new ArrayList<>();
+
+		for(MonthlyTargetAmount monthlyTargetAmount : monthlyTargetAmounts) {
+			categoryMonthlyTargetAmountResponse.add(monthlyTargetAmount.getCategory());
+		}
+
+		return new CategoryMonthlyTargetAmountCategoryResponse(categoryMonthlyTargetAmountResponse);
+	}
 }
 
