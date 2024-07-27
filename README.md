@@ -63,3 +63,13 @@
 
 <hr>
 
+<h3>※ 2024-07-19 ~ 2024-07-22 </h3>
+
+<h4>수행한 작업</h4>
+<ul>
+  <li>CategoryMonthlyTargetAmountDB에서 category 종류만 보내주는 기능</li>
+</ul>
+
+<hr>
+
+
