@@ -66,4 +66,15 @@ public class RecordService {
         .map(RecordDto::withConsumptions)
         .collect(Collectors.toList());
   }
+
+  public List<RecordDto> getWeeklyRecord(LocalDate date, Long userId) { // 일요일부터 시작
+    return recordRepository
+        .findByDateBetweenAndUserWithConsumptions(
+            date.minusDays((date.getDayOfWeek().getValue() % 7)),
+            date.plusDays(6 - (date.getDayOfWeek().getValue() % 7)),
+            userId)
+        .stream()
+        .map(RecordDto::withConsumptions)
+        .collect(Collectors.toList());
+  }
 }
