@@ -14,24 +14,18 @@ public class AuthService {
   private final UserRepository userRepository;
 
   public UserDto kakaoLogin(UserDto dto) {
-    return userRepository
-        .findByKakaoId(dto.getKakaoId())
-        .map(
-            user ->
-                UserDto.builder()
-                    .id(user.getId())
-                    .kakaoId(user.getKakaoId())
-                    .name(user.getName())
-                    .build())
-        .orElseGet(
-            () -> {
-              User user = User.from(dto);
-              userRepository.save(user);
-              return UserDto.from(user);
-            });
+    User user =
+        userRepository
+            .findByKakaoId(dto.getKakaoId())
+            .orElseGet(() -> userRepository.save(User.from(dto)));
+    user.setProfileImageUrl(dto.getProfileImageUrl());
+    user.setName(dto.getName());
+    return UserDto.from(user);
   }
 
-    public User getLoginUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
-    }
+  public User getLoginUser(Long userId) {
+    return userRepository
+        .findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+  }
 }
