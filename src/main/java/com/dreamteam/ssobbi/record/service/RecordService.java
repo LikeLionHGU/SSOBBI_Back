@@ -58,7 +58,7 @@ public class RecordService {
     recordRepository.delete(record);
   }
 
-  public List<RecordDto> getMonthlyRecord(LocalDate date, Long userId) {
+  public List<RecordDto> getMonthlyRecordWithConsumptions(LocalDate date, Long userId) {
     return recordRepository
         .findByDateBetweenAndUserWithConsumptions(
             date.withDayOfMonth(1), date.withDayOfMonth(date.lengthOfMonth()), userId)
@@ -67,7 +67,7 @@ public class RecordService {
         .collect(Collectors.toList());
   }
 
-  public List<RecordDto> getWeeklyRecord(LocalDate date, Long userId) { // 일요일부터 시작
+  public List<RecordDto> getWeeklyRecordWithConsumptions(LocalDate date, Long userId) { // 일요일부터 시작
     return recordRepository
         .findByDateBetweenAndUserWithConsumptions(
             date.minusDays((date.getDayOfWeek().getValue() % 7)),
@@ -75,6 +75,15 @@ public class RecordService {
             userId)
         .stream()
         .map(RecordDto::withConsumptions)
+        .collect(Collectors.toList());
+  }
+
+  public List<RecordDto> getMonthlyRecord(String month, Long userId) {
+    return recordRepository
+        .findByDateBetweenAndUser(
+            LocalDate.parse(month + "-01"), LocalDate.parse(month + "-01").plusMonths(1).minusDays(1), userId)
+        .stream()
+        .map(RecordDto::from)
         .collect(Collectors.toList());
   }
 }

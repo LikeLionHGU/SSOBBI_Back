@@ -17,4 +17,7 @@ public interface RecordRepository extends JpaRepository<Record,Long> {
 
     @Query("select r from Record r join fetch r.consumptions where r.date between :startDate and :endDate and r.user.id = :userId")
     List<Record> findByDateBetweenAndUserWithConsumptions(LocalDate startDate, LocalDate endDate, Long userId);
+
+    @Query("select r from Record r where r.date between :startDate and :endDate and r.user.id = :userId")
+    List<Record> findByDateBetweenAndUser(LocalDate startDate, LocalDate endDate, Long userId);
 }

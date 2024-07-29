@@ -74,4 +74,24 @@ public class RecordDto {
                 .toList())
         .build();
   }
+
+    public static RecordDto from(Record record) {
+        return RecordDto.builder()
+                .id(record.getId())
+                .happinessRate(record.getHappinessRate())
+                .content(record.getContent())
+                .date(record.getDate())
+                .consumptions(
+                        record.getConsumptions().stream()
+                                .map(
+                                        consumption ->
+                                                ConsumptionDto.builder()
+                                                        .category(consumption.getCategory())
+                                                        .amount(consumption.getAmount())
+                                                        .targetAmount(consumption.getTargetAmount())
+                                                        .isOverConsumption(consumption.getIsOverConsumption())
+                                                        .build())
+                                .toList())
+                .build();
+    }
 }
