@@ -18,6 +18,7 @@ public class User extends BaseTime {
 
     private Long kakaoId;
 
+    @Setter
     @Column(columnDefinition = "varchar(200)")
     private String name;
 
@@ -25,6 +26,7 @@ public class User extends BaseTime {
     @Column(columnDefinition = "varchar(20)")
     private String phoneNumber;
 
+    @Setter
     @Column(columnDefinition = "varchar(500)")
     private String profileImageUrl;
 

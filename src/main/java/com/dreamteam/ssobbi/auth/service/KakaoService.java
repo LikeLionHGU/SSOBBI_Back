@@ -91,10 +91,12 @@ public class KakaoService {
 
         Long id = jsonNode.get("id").asLong();
         String nickname = jsonNode.get("properties").get("nickname").asText();
+        String profileImageUrl = jsonNode.get("properties").get("profile_image").asText();
 
         return UserDto.builder()
                 .kakaoId(id)
                 .name(nickname)
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 }

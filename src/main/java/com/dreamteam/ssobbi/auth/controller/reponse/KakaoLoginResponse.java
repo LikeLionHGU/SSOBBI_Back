@@ -7,4 +7,6 @@ import lombok.Getter;
 @Getter
 public class KakaoLoginResponse {
     private String accessToken;
+    private String name;
+    private String profileImageUrl;
 }
