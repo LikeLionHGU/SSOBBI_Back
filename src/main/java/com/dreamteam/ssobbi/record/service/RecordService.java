@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,5 +56,25 @@ public class RecordService {
       throw new UnauthorizedAccessException();
     }
     recordRepository.delete(record);
+  }
+
+  public List<RecordDto> getMonthlyRecord(LocalDate date, Long userId) {
+    return recordRepository
+        .findByDateBetweenAndUserWithConsumptions(
+            date.withDayOfMonth(1), date.withDayOfMonth(date.lengthOfMonth()), userId)
+        .stream()
+        .map(RecordDto::withConsumptions)
+        .collect(Collectors.toList());
+  }
+
+  public List<RecordDto> getWeeklyRecord(LocalDate date, Long userId) { // 일요일부터 시작
+    return recordRepository
+        .findByDateBetweenAndUserWithConsumptions(
+            date.minusDays((date.getDayOfWeek().getValue() % 7)),
+            date.plusDays(6 - (date.getDayOfWeek().getValue() % 7)),
+            userId)
+        .stream()
+        .map(RecordDto::withConsumptions)
+        .collect(Collectors.toList());
   }
 }
