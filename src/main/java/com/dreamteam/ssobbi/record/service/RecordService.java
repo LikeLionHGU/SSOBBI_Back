@@ -81,9 +81,22 @@ public class RecordService {
   public List<RecordDto> getMonthlyRecord(String month, Long userId) {
     return recordRepository
         .findByDateBetweenAndUser(
-            LocalDate.parse(month + "-01"), LocalDate.parse(month + "-01").plusMonths(1).minusDays(1), userId)
+            LocalDate.parse(month + "-01"),
+            LocalDate.parse(month + "-01").plusMonths(1).minusDays(1),
+            userId)
         .stream()
         .map(RecordDto::from)
+        .collect(Collectors.toList());
+  }
+
+  public List<RecordDto> getMonthlyRecordWithConsumptions(String month, Long userId) {
+    return recordRepository
+        .findByDateBetweenAndUserWithConsumptions(
+            LocalDate.parse(month + "-01"),
+            LocalDate.parse(month + "-01").plusMonths(1).minusDays(1),
+            userId)
+        .stream()
+        .map(RecordDto::withConsumptions)
         .collect(Collectors.toList());
   }
 }
