@@ -14,6 +14,7 @@ import java.util.List;
 public class MonthlyRecordSummaryResponse {
   private Integer happinessRate;
   private Integer totalOverConsumptionCount;
+  private Integer totalOverConsumptionAmount;
   private Integer totalConsumptionCount;
   private Integer overConsumptionRate;
   private List<TopFourOverConsumptionCategory> topFourOverConsumptionCategories;
@@ -36,6 +37,7 @@ public class MonthlyRecordSummaryResponse {
                     .sum())
             .totalConsumptionCount(
                 dtos.stream().mapToInt(dto -> dto.getConsumptions().size()).sum())
+            .totalOverConsumptionAmount(dtos.stream().mapToInt(RecordDto::getOverConsumptionAmount).sum())
             .topFourOverConsumptionCategories(
                 dtos.stream()
                     .flatMap(dto -> dto.getConsumptions().stream())

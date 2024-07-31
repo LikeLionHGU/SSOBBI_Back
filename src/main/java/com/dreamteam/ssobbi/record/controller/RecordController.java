@@ -73,4 +73,11 @@ public class RecordController {
         return ResponseEntity.ok(
             MonthlyRecordedDateResponse.from(recordService.getMonthlyRecord(month, userId)));
     }
+
+    @GetMapping("/api/ssobbi/records/monthly/{month}/summary/by-happiness-rate")
+    public ResponseEntity<MonthlyHappinessRecordSummaryResponse> getMonthlyHappinessRecordSummary(
+        @PathVariable String month, @AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(
+            MonthlyHappinessRecordSummaryResponse.from(recordService.getMonthlyRecordWithConsumptions(month, userId)));
+    }
 }
