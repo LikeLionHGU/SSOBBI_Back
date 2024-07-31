@@ -3,15 +3,12 @@ package com.dreamteam.ssobbi.monthlyTargetAmount.controller;
 //import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountCategoryResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
-import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequests;
 import com.dreamteam.ssobbi.monthlyTargetAmount.service.MonthlyTargetAmountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class MonthlyTargetAmountController {
 
 	@GetMapping("/monthly/TargetAmount/category-list")
 	public ResponseEntity<CategoryMonthlyTargetAmountCategoryResponse> getMonthlyTargetAmountByCategory(@AuthenticationPrincipal Long userId) {
-		return ResponseEntity.ok(monthlyTargetAmountService.getMonthlyTargetAmountByCategory(userId));
+		return ResponseEntity.ok(monthlyTargetAmountService.getCategoryList(userId));
 	}
 
 }
