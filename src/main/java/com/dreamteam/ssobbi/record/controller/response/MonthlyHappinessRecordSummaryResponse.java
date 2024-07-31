@@ -50,9 +50,12 @@ public class MonthlyHappinessRecordSummaryResponse {
           .date(recordDto.getDate())
           .happinessRate(recordDto.getHappinessRate())
           .normalizationOverConsumptionAmount(
-              recordDto.getOverConsumptionAmount() * 100 / maxAmount)
+              maxAmount != 0 ? recordDto.getOverConsumptionAmount() * 100 / maxAmount : 0)
           .overConsumptionCategories(
-              recordDto.getConsumptions().stream().filter(ConsumptionDto::getIsOverConsumption).map(ConsumptionDto::getCategory).toList())
+              recordDto.getConsumptions().stream()
+                  .filter(ConsumptionDto::getIsOverConsumption)
+                  .map(ConsumptionDto::getCategory)
+                  .toList())
           .happinessLevel(
               HappinessLevel.from(
                       HappinessAverage, recordDto.getHappinessRate(), happinessStandardDeviation)
