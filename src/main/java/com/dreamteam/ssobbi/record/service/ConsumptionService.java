@@ -1,7 +1,6 @@
 package com.dreamteam.ssobbi.record.service;
 
 import com.dreamteam.ssobbi.base.exception.NotFoundException;
-import com.dreamteam.ssobbi.monthlyTargetAmount.repository.MonthlyTargetAmountRepository;
 import com.dreamteam.ssobbi.monthlyTargetAmount.service.MonthlyTargetAmountService;
 import com.dreamteam.ssobbi.record.controller.response.MonthlyConsumptionsAndTargetsByCategoryResponse;
 import com.dreamteam.ssobbi.record.entity.Consumption;
@@ -23,52 +22,56 @@ public class ConsumptionService {
 	private final RecordRepository recordRepository;
 	private final UserRepository userRepository;
 	private final MonthlyTargetAmountService monthlyTargetAmountService;
-	private final MonthlyTargetAmountRepository monthlyTargetAmountRepository;
 
 	public ConsumptionService(
 		ConsumptionRepository consumptionRepository,
 		RecordRepository recordRepository,
 		UserRepository userRepository,
-		MonthlyTargetAmountService monthlyTargetAmountService, MonthlyTargetAmountRepository monthlyTargetAmountRepository) {
+		MonthlyTargetAmountService monthlyTargetAmountService) {
 		this.consumptionRepository = consumptionRepository;
 		this.recordRepository = recordRepository;
 		this.userRepository = userRepository;
 		this.monthlyTargetAmountService = monthlyTargetAmountService;
-		this.monthlyTargetAmountRepository = monthlyTargetAmountRepository;
 	}
 
 	public MonthlyConsumptionsAndTargetsByCategoryResponse getMonthlyCategoryConsumption(Long userId, LocalDate date) {
 
-		ArrayList<Record> records =
-			recordRepository.findByUser((userRepository.findById(userId)).orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다.")));
+		// 유저의 record를 가져온다.
+		ArrayList<Record> records =	recordRepository.findByUser((userRepository.findById(userId)).orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다.")));
 
-		ArrayList<ArrayList<Consumption>> monthlyAllConsumption = getMonthlyConsumption(records, date);
-		ArrayList<String> categoryList = monthlyTargetAmountService.getMonthlyTargetAmountByCategory(userId).getCategories();
+		// records 중에, 알고자 하는 달의 내역을 가져와요.
+		ArrayList<ArrayList<Consumption>> userMonthlyConsumptions = getMonthlyConsumption(records, date);
 
+		// 카테고리 리스트를 가져와요.
+		ArrayList<String> categoryList = monthlyTargetAmountService.getCategoryList(userId).getCategories();
+
+		// 카테고리 별로 소비한 금액을 가져와요.
 		ArrayList<MonthlyConsumptionsAndTargetsByCategoryResponse.MonthlyConsumptionsAndTargetsByCategory> response =
-			getMonthlyConsumptionsAndTargetsByCategory(monthlyAllConsumption, categoryList);
+			getMonthlyConsumptionsAndTargetsByCategory(userMonthlyConsumptions, categoryList);
 
+		// 예외 처리 cofactor 필요.
+		if(userRepository.findById(userId).orElseThrow(()-> new NotFoundException("유저 정보가 없습니다.")).getIncome() == null)
+			throw new NotFoundException("Income 정보를 찾을 수 없습니다. (income 등륵 해주세요)");
 
+		// 반환 처리
 		return MonthlyConsumptionsAndTargetsByCategoryResponse.builder()
 			.userIncome(userRepository.findById(userId).orElseThrow(()-> new NotFoundException("유저 정보가 없습니다.")).getIncome())
 			.monthlyConsumptionsAndTargetsByCategory(response)
 			.build();
-
 	}
 
 	private ArrayList<MonthlyConsumptionsAndTargetsByCategoryResponse.MonthlyConsumptionsAndTargetsByCategory> getMonthlyConsumptionsAndTargetsByCategory(
-		ArrayList<ArrayList<Consumption>> monthlyAllConsumption,
+		ArrayList<ArrayList<Consumption>> userMonthlyConsumptions,
 		ArrayList<String> categoryList) {
 
-		HashMap<String, Integer> amountByCategory = getAmountByCategory(categoryList, monthlyAllConsumption);
+		// categort - consumption amount -> ??
+		HashMap<String, Integer> amountByCategory = getAmountByCategory(categoryList, userMonthlyConsumptions);
 
-		HashMap<String, Integer> targetAmount = getTargetAmount(categoryList);
+		// category - target amount -> OK
+		HashMap<String, Integer> targetAmount = MonthlyTargetAmountService.getAmountAndCategory();
 
 		ArrayList<MonthlyConsumptionsAndTargetsByCategoryResponse.MonthlyConsumptionsAndTargetsByCategory> response =
 			getMonthlyConsumptionsAndTargetsByCategoryList(amountByCategory, targetAmount);
-
-//		response.add(MonthlyConsumptionsAndTargetsByCategoryResponse
-//			.MonthlyConsumptionsAndTargetsByCategory.from(amountByCategory.get(0), amountByCategory.get(1), getTargetAmount(category)));
 
 		return response;
 	}
@@ -86,20 +89,12 @@ public class ConsumptionService {
 		return response;
 	}
 
-	private HashMap<String, Integer> getTargetAmount(ArrayList<String> categoryList) {
-		HashMap<String, Integer> targetAmount = new HashMap<>();
-		for(String category : categoryList) {
-			targetAmount.put(category, monthlyTargetAmountRepository.findByCategory(category).getAmount());
-		}
-		return targetAmount;
-	}
-
-	private HashMap<String, Integer> getAmountByCategory(ArrayList<String> categoryList, ArrayList<ArrayList<Consumption>> monthlyAllConsumption) {
+	private HashMap<String, Integer> getAmountByCategory(ArrayList<String> categoryList, ArrayList<ArrayList<Consumption>> userMonthlyConsumptions) {
 		HashMap<String, Integer> amountByCategoryRes = new HashMap<>();
 
 		for(String category : categoryList) {
 			int categorySum = 0;
-			for(ArrayList<Consumption> consumptions : monthlyAllConsumption) {
+			for(ArrayList<Consumption> consumptions : userMonthlyConsumptions) {
 				for(Consumption consumption : consumptions) {
 					if(consumption.getCategory().equals(category)) {
 						categorySum += consumption.getAmount();
@@ -112,14 +107,14 @@ public class ConsumptionService {
 		return amountByCategoryRes;
 	}
 
-	private ArrayList<ArrayList<Consumption>> getMonthlyConsumption(ArrayList<Record> records, LocalDate date) {
-		ArrayList<ArrayList<Consumption>> monthlyAllConsumption = new ArrayList<>();
-		for (Record record : records) {
+	private ArrayList<ArrayList<Consumption>> getMonthlyConsumption(ArrayList<Record> userRecords, LocalDate date) {
+		ArrayList<ArrayList<Consumption>> userMonthlyConsumptions = new ArrayList<>();
+		for (Record record : userRecords) {
 			if (record.getDate().getMonth() == date.getMonth()) {
-				monthlyAllConsumption.add(consumptionRepository.findByRecord(record));
+				userMonthlyConsumptions.add(consumptionRepository.findByRecord(record));
 			}
 		}
-		return monthlyAllConsumption;
+		return userMonthlyConsumptions;
 	}
 
 }

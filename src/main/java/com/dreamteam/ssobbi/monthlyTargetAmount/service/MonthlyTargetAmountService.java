@@ -13,12 +13,13 @@ import com.dreamteam.ssobbi.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service
 public class MonthlyTargetAmountService {
 
 	private final UserRepository userRepository;
-	private final MonthlyTargetAmountRepository monthlyTargetAmountRepository;
+	private static MonthlyTargetAmountRepository monthlyTargetAmountRepository;
 
 	public MonthlyTargetAmountService(UserRepository userRepository, MonthlyTargetAmountRepository monthlyTargetAmountRepository) {
 		this.userRepository = userRepository;
@@ -83,7 +84,7 @@ public class MonthlyTargetAmountService {
 		}
 	}
 
-	public CategoryMonthlyTargetAmountCategoryResponse getMonthlyTargetAmountByCategory(Long userId) {
+	public CategoryMonthlyTargetAmountCategoryResponse getCategoryList(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
 
 		ArrayList<MonthlyTargetAmount> monthlyTargetAmounts = monthlyTargetAmountRepository.findByUser(user);
@@ -101,5 +102,15 @@ public class MonthlyTargetAmountService {
 
 		return new CategoryMonthlyTargetAmountCategoryResponse(categoryMonthlyTargetAmountResponse);
 	}
+
+	public static HashMap<String, Integer>  getAmountAndCategory(){
+		HashMap<String, Integer> amountByCategory = new HashMap<>();
+		ArrayList<MonthlyTargetAmount> monthlyTargetAmounts = (ArrayList<MonthlyTargetAmount>) monthlyTargetAmountRepository.findAll();
+		for(MonthlyTargetAmount monthlyTargetAmount : monthlyTargetAmounts) {
+			amountByCategory.put(monthlyTargetAmount.getCategory(), monthlyTargetAmount.getAmount());
+		}
+		return amountByCategory;
+	}
+
 }
 
