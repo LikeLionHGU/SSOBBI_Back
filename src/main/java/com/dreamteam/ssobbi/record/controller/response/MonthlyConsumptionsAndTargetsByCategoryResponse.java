@@ -8,6 +8,7 @@ import java.util.ArrayList;
 @Builder
 public class MonthlyConsumptionsAndTargetsByCategoryResponse {
 
+	int userIncome;
 	private ArrayList<MonthlyConsumptionsAndTargetsByCategory> monthlyConsumptionsAndTargetsByCategory;
 
 	public void add(MonthlyConsumptionsAndTargetsByCategory monthlyConsumptionsAndTargetsByCategory) {
