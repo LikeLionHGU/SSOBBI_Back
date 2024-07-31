@@ -46,13 +46,21 @@ public class MonthlyTargetAmountService {
 	public void updateMonthlyTargetAmount(Long userId, ArrayList<CategoryMonthlyTargetAmountRequest> request) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
 
-		CheckException(request);
+		CheckExceptionAboutPatchCategory(request);
 
 		for(CategoryMonthlyTargetAmountRequest categoryMonthlyTargetAmountRequest : request) {
+			try{
 			MonthlyTargetAmount monthlyTargetAmount = (MonthlyTargetAmount) monthlyTargetAmountRepository.findByUserAndCategory(user, categoryMonthlyTargetAmountRequest.getCategory())
 				.orElseThrow(() -> new NotFoundException("해당 카테고리의 목표 금액이 DB에 없습니다."));
 			monthlyTargetAmount.setAmount(categoryMonthlyTargetAmountRequest.getAmount());
 			monthlyTargetAmountRepository.save(monthlyTargetAmount);
+			} catch (Exception e) {
+				monthlyTargetAmountRepository.save(MonthlyTargetAmount.builder()
+					.category(categoryMonthlyTargetAmountRequest.getCategory())
+					.amount(categoryMonthlyTargetAmountRequest.getAmount())
+					.user(user)
+					.build());
+			}
 		}
 	}
 
@@ -76,6 +84,11 @@ public class MonthlyTargetAmountService {
 		CheckInputNull(requests);
 		CheckInputNegative(requests);
 		CheckDuplicateCategoryAboutInput(requests);
+	}
+
+	private void CheckExceptionAboutPatchCategory(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
+		CheckInputNull(requests);
+		CheckInputNegative(requests);
 	}
 
 	private void CheckDuplicateCategoryAboutDBAndInput(ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
