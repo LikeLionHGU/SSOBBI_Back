@@ -3,11 +3,11 @@ package com.dreamteam.ssobbi.user.controller.response;
 import lombok.Data;
 
 @Data
-public class UpdateUserInfoAboutPhone {
+public class UpdateUserInfoAboutPhoneResponse {
 	private String name;
 	private String phoneNumber;
 
-	public UpdateUserInfoAboutPhone(String name, String phoneNumber) {
+	public UpdateUserInfoAboutPhoneResponse(String name, String phoneNumber) {
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 	}
