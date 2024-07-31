@@ -1,26 +1,26 @@
 package com.dreamteam.ssobbi.message.controller;
-import com.dreamteam.ssobbi.message.service.CoolSMSService;
-import lombok.RequiredArgsConstructor;
+import com.dreamteam.ssobbi.message.config.ScheduledConfig;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/ssobbi/notifications")
-@RequiredArgsConstructor
 public class CoolSMSController {
 
-	private final CoolSMSService coolSMSService;
+	private final ScheduledConfig scheduledConfig;
+
+	public CoolSMSController(ScheduledConfig scheduledConfig) {
+		this.scheduledConfig = scheduledConfig;
+	}
 
 	@PostMapping("/send")
-	public ResponseEntity<ArrayList<SingleMessageSentResponse>> sendOneAta() {
-		return ResponseEntity.ok().body(coolSMSService.sendMessage());
+	public ResponseEntity<Void> sendOneAta() {
+		scheduledConfig.sendDailyMessage();
+		return ResponseEntity.ok().build(); //body(scheduledConfig.sendDailyMessage());
 	}
 }
 
