@@ -1,6 +1,5 @@
 package com.dreamteam.ssobbi.message.service;
 
-import com.dreamteam.ssobbi.message.controller.CoolSMSController;
 import com.dreamteam.ssobbi.user.dto.UserDto;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
 import net.nurigo.sdk.NurigoApp;
@@ -9,8 +8,6 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import com.dreamteam.ssobbi.user.entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import net.nurigo.sdk.message.model.Message;
@@ -22,11 +19,9 @@ import java.util.Map;
 
 
 @Service
-//@RequiredArgsConstructor
 public class CoolSMSService {
 
 	private final DefaultMessageService messageService;
-	private static final Logger logger = LoggerFactory.getLogger(CoolSMSController.class);
 
 	@Value("${coolsms.template.ID}") String templateId;
 	@Value("${coolsms.template.PFID}") String templatePfId;
