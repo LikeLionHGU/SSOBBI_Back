@@ -15,7 +15,7 @@ public class ScheduledConfig {
 		this.coolSMSService = coolSMSService;
 	}
 
-	@Scheduled(cron = "0 0 21 * * *", zone = "Asia/Seoul")
+//	@Scheduled(cron = "0 0 21 * * *", zone = "Asia/Seoul")
 	public void sendDailyMessage() {
 		coolSMSService.sendMessage();
 	}
