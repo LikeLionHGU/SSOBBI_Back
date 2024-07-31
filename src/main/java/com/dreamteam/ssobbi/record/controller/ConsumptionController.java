@@ -22,7 +22,6 @@ public class ConsumptionController {
 	}
 
 	@GetMapping("/monthly/category")
-//	public ResponseEntity<ArrayList<ArrayList<Consumption>>> getMonthlyCategoryConsumption(@AuthenticationPrincipal Long userId) {
 	public ResponseEntity<MonthlyConsumptionsAndTargetsByCategoryResponse> getMonthlyCategoryConsumption(@AuthenticationPrincipal Long userId) {
 		return ResponseEntity.ok().body(consumptionService.getMonthlyCategoryConsumption(userId));
 	}
