@@ -36,16 +36,12 @@ public class ConsumptionService {
 
 	public MonthlyConsumptionsAndTargetsByCategoryResponse getMonthlyCategoryConsumption(Long userId, LocalDate date) {
 
-		// 유저의 record를 가져온다.
 		ArrayList<Record> records =	recordRepository.findByUser((userRepository.findById(userId)).orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다.")));
 
-		// records 중에, 알고자 하는 달의 내역을 가져와요.
 		ArrayList<ArrayList<Consumption>> userMonthlyConsumptions = getMonthlyConsumption(records, date);
 
-		// 카테고리 리스트를 가져와요.
 		ArrayList<String> categoryList = monthlyTargetAmountService.getCategoryList(userId).getCategories();
 
-		// 카테고리 별로 소비한 금액을 가져와요.
 		ArrayList<MonthlyConsumptionsAndTargetsByCategoryResponse.MonthlyConsumptionsAndTargetsByCategory> response =
 			getMonthlyConsumptionsAndTargetsByCategory(userMonthlyConsumptions, categoryList);
 
@@ -53,7 +49,6 @@ public class ConsumptionService {
 		if(userRepository.findById(userId).orElseThrow(()-> new NotFoundException("유저 정보가 없습니다.")).getIncome() == null)
 			throw new NotFoundException("Income 정보를 찾을 수 없습니다. (income 등륵 해주세요)");
 
-		// 반환 처리
 		return MonthlyConsumptionsAndTargetsByCategoryResponse.builder()
 			.userIncome(userRepository.findById(userId).orElseThrow(()-> new NotFoundException("유저 정보가 없습니다.")).getIncome())
 			.monthlyConsumptionsAndTargetsByCategory(response)
@@ -64,10 +59,8 @@ public class ConsumptionService {
 		ArrayList<ArrayList<Consumption>> userMonthlyConsumptions,
 		ArrayList<String> categoryList) {
 
-		// categort - consumption amount -> ??
 		HashMap<String, Integer> amountByCategory = getAmountByCategory(categoryList, userMonthlyConsumptions);
 
-		// category - target amount -> OK
 		HashMap<String, Integer> targetAmount = MonthlyTargetAmountService.getAmountAndCategory();
 
 		ArrayList<MonthlyConsumptionsAndTargetsByCategoryResponse.MonthlyConsumptionsAndTargetsByCategory> response =
