@@ -35,7 +35,11 @@ public class UserController {
 		return ResponseEntity.ok().body(updateUserIncome);
 	}
 
-
+	@GetMapping("/monthly/income")
+	public ResponseEntity<UpdateUseIncome> getIncome(@AuthenticationPrincipal Long id) {
+		UpdateUseIncome updateUserIncome = userService.getIncome(id);
+		return ResponseEntity.ok().body(updateUserIncome);
+	}
 
 }
 

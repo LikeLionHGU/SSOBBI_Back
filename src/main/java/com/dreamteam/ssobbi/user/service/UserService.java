@@ -40,4 +40,9 @@ public class UserService {
 
 		return new UpdateUseIncome(user.getName(), user.getIncome());
 	}
+
+	public UpdateUseIncome getIncome(Long id) {
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("유저 정보가 DB에 없습니다"));
+		return new UpdateUseIncome(user.getName(), user.getIncome());
+	}
 }
