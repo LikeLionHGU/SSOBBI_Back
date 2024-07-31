@@ -96,11 +96,13 @@ public class RecordDto {
   }
 
   public static Integer getHappinessAverage(List<RecordDto> recordDtos) {
+    if (recordDtos.isEmpty()) return 0;
     return recordDtos.stream().map(RecordDto::getHappinessRate).reduce(0, Integer::sum)
         / recordDtos.size();
   }
 
   public static Integer getHappinessStandardDeviation(List<RecordDto> recordDtos, Integer average) {
+    if (recordDtos.isEmpty()) return 0;
     return (int)
         Math.sqrt(
             recordDtos.stream()
