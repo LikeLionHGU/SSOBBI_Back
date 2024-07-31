@@ -24,15 +24,19 @@ public class Consumption extends BaseTime {
 
   @ManyToOne
   @JoinColumn(name = "record_id")
-  @JsonBackReference  // 순환참조 방지
+  @JsonBackReference // 순환참조 방지
   private Record record;
 
+  @Column(name = "amount", nullable = false)
   private Integer amount;
 
+  @Column(name = "is_over_consumption", nullable = false)
   private Boolean isOverConsumption;
 
+  @Column(name = "target_amount", nullable = false)
   private Integer targetAmount;
 
+  @Column(name = "category", nullable = false)
   private String category;
 
   public static List<Consumption> listFrom(List<ConsumptionDto> consumptions, Record record) {
