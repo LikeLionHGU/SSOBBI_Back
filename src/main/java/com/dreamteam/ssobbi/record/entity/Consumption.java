@@ -2,6 +2,7 @@ package com.dreamteam.ssobbi.record.entity;
 
 import com.dreamteam.ssobbi.base.entity.BaseTime;
 import com.dreamteam.ssobbi.record.dto.ConsumptionDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class Consumption extends BaseTime {
 
   @ManyToOne
   @JoinColumn(name = "record_id")
+  @JsonBackReference  // 순환참조 방지
   private Record record;
 
   private Integer amount;
