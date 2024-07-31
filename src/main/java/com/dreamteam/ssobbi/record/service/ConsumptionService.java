@@ -8,10 +8,12 @@ import com.dreamteam.ssobbi.record.entity.Record;
 import com.dreamteam.ssobbi.record.repository.ConsumptionRepository;
 import com.dreamteam.ssobbi.record.repository.RecordRepository;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class ConsumptionService {
@@ -32,18 +34,22 @@ public class ConsumptionService {
 		this.monthlyTargetAmountService = monthlyTargetAmountService;
 	}
 
-	public MonthlyConsumptionsAndTargetsByCategoryResponse getMonthlyCategoryConsumption(Long userId) {
+	public MonthlyConsumptionsAndTargetsByCategoryResponse getMonthlyCategoryConsumption(Long userId, LocalDate date) {
 
 		ArrayList<Record> records =
 			recordRepository.findByUser((userRepository.findById(userId)).orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다.")));
 
-		ArrayList<ArrayList<Consumption>> monthlyAllConsumption = getMonthlyConsumption(records);
+		ArrayList<ArrayList<Consumption>> monthlyAllConsumption = getMonthlyConsumption(records, date);
 		ArrayList<String> categoryList = monthlyTargetAmountService.getMonthlyTargetAmountByCategory(userId).getCategories();
 
 		ArrayList<MonthlyConsumptionsAndTargetsByCategoryResponse.MonthlyConsumptionsAndTargetsByCategory> response =
 			getMonthlyConumptionsAndTargetsByCategory(monthlyAllConsumption, categoryList);
 
-		return MonthlyConsumptionsAndTargetsByCategoryResponse.builder().monthlyConsumptionsAndTargetsByCategory(response).build();
+
+		return MonthlyConsumptionsAndTargetsByCategoryResponse.builder()
+			.userIncome(userRepository.findById(userId).orElseThrow(()-> new NotFoundException("유저 정보가 없습니다.")).getIncome())
+			.monthlyConsumptionsAndTargetsByCategory(response)
+			.build();
 
 	}
 
@@ -65,10 +71,10 @@ public class ConsumptionService {
 		return response;
 	}
 
-	private ArrayList<ArrayList<Consumption>> getMonthlyConsumption(ArrayList<Record> records) {
+	private ArrayList<ArrayList<Consumption>> getMonthlyConsumption(ArrayList<Record> records, LocalDate date) {
 		ArrayList<ArrayList<Consumption>> monthlyAllConsumption = new ArrayList<>();
 		for (Record record : records) {
-			if (record.getDate().getMonth() == LocalDate.now().getMonth()) {
+			if (record.getDate().getMonth() == date.getMonth()) {
 				monthlyAllConsumption.add(consumptionRepository.findByRecord(record));
 			}
 		}
