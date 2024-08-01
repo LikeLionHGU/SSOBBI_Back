@@ -10,6 +10,7 @@ import com.dreamteam.ssobbi.monthlyTargetAmount.exception.NullValueException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.repository.MonthlyTargetAmountRepository;
 import com.dreamteam.ssobbi.user.entity.User;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,12 +27,16 @@ public class MonthlyTargetAmountService {
 		this.monthlyTargetAmountRepository = monthlyTargetAmountRepository;
 	}
 
+	@Transactional
 	public void saveMonthlyTargetAmount(Long id, ArrayList<CategoryMonthlyTargetAmountRequest> requests) {
 		User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다."));
 
 		CheckException(requests);
 
-		for(CategoryMonthlyTargetAmountRequest categoryMonthlyTargetAmountRequest : requests) {
+		// 해당 유저의 모든 목표 금액을 삭제하고 새로 추가하는 방법
+		 monthlyTargetAmountRepository.deleteByUser(user);
+
+		 for(CategoryMonthlyTargetAmountRequest categoryMonthlyTargetAmountRequest : requests) {
 			try{
 				MonthlyTargetAmount monthlyTargetAmount = (MonthlyTargetAmount) monthlyTargetAmountRepository.findByUserAndCategory(user, categoryMonthlyTargetAmountRequest.getCategory())
 					.orElseThrow(() -> new NotFoundException("해당 카테고리의 목표 금액이 DB에 없습니다."));

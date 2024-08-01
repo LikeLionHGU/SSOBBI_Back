@@ -18,4 +18,6 @@ public interface MonthlyTargetAmountRepository extends JpaRepository<MonthlyTarg
 	boolean existsByCategory(String category);
 
 	MonthlyTargetAmount findByCategory(String category);
+
+	void deleteByUser(User user);
 }
