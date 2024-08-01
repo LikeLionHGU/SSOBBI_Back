@@ -9,4 +9,5 @@ public class KakaoLoginResponse {
     private String accessToken;
     private String name;
     private String profileImageUrl;
+    private String phoneNumber;
 }

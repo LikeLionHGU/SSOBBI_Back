@@ -36,6 +36,7 @@ public class AuthController {
             .accessToken(JwtUtil.createToken(userDto.getId(), SECRET_KEY, EXPIRE_TIME_MS))
             .name(userDto.getName())
             .profileImageUrl(userDto.getProfileImageUrl())
+            .phoneNumber(userDto.getPhoneNumber())
             .build());
   }
 }
