@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Optional;
 
 @Builder
 @Getter
@@ -20,14 +21,17 @@ public class DailyRecordSummaryResponse {
     if (dto == null) {
       return DailyRecordSummaryResponse.builder().isRecorded(false).build();
     }
+    int totalOverConsumptionCount = Optional.of(
+            dto.getConsumptions().stream()
+                    .filter(ConsumptionDto::getIsOverConsumption)
+                    .mapToInt(consumption -> 1)
+                    .sum()
+    ).orElse(0);
+
     return DailyRecordSummaryResponse.builder()
         .happinessRate(dto.getHappinessRate())
         .content(dto.getContent())
-        .totalOverConsumptionCount(
-            dto.getConsumptions().stream()
-                .filter(ConsumptionDto::getIsOverConsumption)
-                .mapToInt(consumption -> 1)
-                .sum())
+        .totalOverConsumptionCount(totalOverConsumptionCount)
         .overConsumptionCategories(
             dto.getConsumptions().stream()
                 .filter(ConsumptionDto::getIsOverConsumption)

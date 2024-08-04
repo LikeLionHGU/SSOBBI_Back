@@ -5,6 +5,7 @@ import com.dreamteam.ssobbi.auth.service.AuthService;
 import com.dreamteam.ssobbi.auth.service.KakaoService;
 import com.dreamteam.ssobbi.auth.util.JwtUtil;
 import com.dreamteam.ssobbi.user.dto.UserDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,10 @@ public class AuthController {
   private long EXPIRE_TIME_MS;
 
   @GetMapping("/api/ssobbi/auth/kakao-login")
-  public ResponseEntity<KakaoLoginResponse> kakaoLogin(@RequestParam String code) {
+  public ResponseEntity<KakaoLoginResponse> kakaoLogin(@RequestParam String code, HttpServletRequest request) {
     UserDto userDto =
         authService.kakaoLogin(
-            kakaoService.kakaoLogin(code, "http://localhost:3000/login/oauth/kakao"));
+            kakaoService.kakaoLogin(code,request.getHeader("Referer")+"login/oauth/kakao"));
     return ResponseEntity.ok(
         KakaoLoginResponse.builder()
             .accessToken(JwtUtil.createToken(userDto.getId(), SECRET_KEY, EXPIRE_TIME_MS))
