@@ -1,6 +1,6 @@
-<a href src="https://certain-error-7bb.notion.site/API-9357ee0de8d8463384de706842669935?pvs=25" alt="">API 명세
+<a href="https://certain-error-7bb.notion.site/API-9357ee0de8d8463384de706842669935?pvs=25" alt="">API 명세
 
-<a href src="https://ssobbi.netlify.app"> 서비스로 가기 </a>
+<a href="https://ssobbi.netlify.app"> 서비스로 가기 </a>
 
 <h2>일지</h2>
 
