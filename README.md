@@ -1,6 +1,28 @@
-<a href="https://certain-error-7bb.notion.site/API-9357ee0de8d8463384de706842669935?pvs=25" alt="">API 명세
+# 건강한 소비 습관 도우미, SSOBBI 
+![표지 (2)](https://github.com/user-attachments/assets/9136eac2-93f1-4d92-a1cf-8cb2a790b128)
+<br>
 
-<a href="https://ssobbi.netlify.app"> 서비스로 가기 </a>
+## 📌 멋쟁이 사자처럼 12기 중앙 해커톤 주제
+<p align="justify">IT 기술을 활용하여 현대인의 건강 (wellness) 문제를 해결할 수 있는 서비스</p>
+<h4>집중한 포인트 🌟 재정적 WELLNESS 🌟</h4>
+<br>
+
+## 💻 프로젝트 소개
+<p align="justify">
+  현대인의 감정적 소비를 분석하고 건강한 소비 습관 형성을 돕는 서비스
+</p>
+
+## 🗓️ 개발 기간
+<p align="justify">24.07.14일 ~ 24.08.06일</p>
+
+## 🖥️ 배포 주소
+<a href="https://ssobbi.netlify.app">SSOBBI로 건강한 소비 습관 형성하자!
+
+## ✏ <a href="https://certain-error-7bb.notion.site/API-9357ee0de8d8463384de706842669935?pvs=25" alt="">API 명세
+
+---
+---
+
 
 <h2>일지</h2>
 
