@@ -6,6 +6,7 @@ import com.dreamteam.ssobbi.user.controller.request.UserIncomeRequest;
 import com.dreamteam.ssobbi.user.controller.response.AboutUserCategoryConsumptionResponse;
 import com.dreamteam.ssobbi.user.controller.response.AboutUserIncomeResponse;
 import com.dreamteam.ssobbi.user.controller.response.UpdateUserInfoAboutPhoneResponse;
+import com.dreamteam.ssobbi.user.dto.UserDto;
 import com.dreamteam.ssobbi.user.entity.User;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -64,5 +65,10 @@ public class UserService {
 		userCategoryAndAmounts.add(new AboutUserCategoryConsumptionResponse.userCategoryAndAmount("문화", 0));
 		userCategoryAndAmounts.add(new AboutUserCategoryConsumptionResponse.userCategoryAndAmount("기타", user.getIncome()));
 		return userCategoryAndAmounts;
+	}
+
+	public UserDto getUser(Long id) {
+		User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("유저 정보가 DB에 없습니다"));
+		return UserDto.from(user);
 	}
 }

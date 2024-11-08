@@ -3,16 +3,19 @@ package com.dreamteam.ssobbi.record.service;
 import com.dreamteam.ssobbi.base.exception.NotFoundException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.service.MonthlyTargetAmountService;
 import com.dreamteam.ssobbi.record.controller.response.MonthlyConsumptionsAndTargetsByCategoryResponse;
+import com.dreamteam.ssobbi.record.dto.ConsumptionDto;
 import com.dreamteam.ssobbi.record.entity.Consumption;
 import com.dreamteam.ssobbi.record.entity.Record;
 import com.dreamteam.ssobbi.record.repository.ConsumptionRepository;
 import com.dreamteam.ssobbi.record.repository.RecordRepository;
+import com.dreamteam.ssobbi.user.entity.User;
 import com.dreamteam.ssobbi.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -110,6 +113,11 @@ public class ConsumptionService {
 		return userMonthlyConsumptions;
 	}
 
+	public List<ConsumptionDto> getMonthlyConsumptionByUserAndDate(Long userId, LocalDate date) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("해당 유저가 존재하지 않습니다."));
+		List<Consumption> consumptions = consumptionRepository.findMonthlyByUserAndDate(user, date.withDayOfMonth(1), date.withDayOfMonth(date.lengthOfMonth()));
+		return ConsumptionDto.from(consumptions);
+	}
 }
 
 

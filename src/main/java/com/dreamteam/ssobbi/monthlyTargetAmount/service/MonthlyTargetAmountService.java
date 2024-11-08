@@ -4,6 +4,7 @@ import com.dreamteam.ssobbi.base.exception.NotFoundException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountCategoryResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.reponse.CategoryMonthlyTargetAmountResponse;
 import com.dreamteam.ssobbi.monthlyTargetAmount.controller.request.CategoryMonthlyTargetAmountRequest;
+import com.dreamteam.ssobbi.monthlyTargetAmount.dto.MonthlyTargetAmountDto;
 import com.dreamteam.ssobbi.monthlyTargetAmount.entity.MonthlyTargetAmount;
 import com.dreamteam.ssobbi.monthlyTargetAmount.exception.NegativeValueException;
 import com.dreamteam.ssobbi.monthlyTargetAmount.exception.NullValueException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class MonthlyTargetAmountService {
@@ -117,5 +119,9 @@ public class MonthlyTargetAmountService {
 		return amountByCategory;
 	}
 
+    public List<MonthlyTargetAmountDto> getMonthlyTargetAmount2(Long userId) {
+		List<MonthlyTargetAmount> monthlyTargetAmounts = monthlyTargetAmountRepository.findByUser(userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 정보가 DB에 없습니다.")));
+		return monthlyTargetAmounts.stream().map(MonthlyTargetAmountDto::from).toList();
+    }
 }
 
